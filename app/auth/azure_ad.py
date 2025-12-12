@@ -202,6 +202,15 @@ def _extract_groups_from_claims(claims: dict) -> List[str]:
     return []
 
 
+def _extract_roles_from_claims(claims: dict) -> List[str]:
+    """
+    Extrae los roles del token.
+    """
+    roles = claims.get("roles") or []
+    if isinstance(roles, list):
+        return [str(r) for r in roles]
+    return []
+
 async def get_current_user_claims(
     request: Request, settings: AzureADSettings = Depends(get_settings)
 ) -> dict:
@@ -240,12 +249,14 @@ def build_user_info_from_claims(claims: dict) -> dict:
     """
     email = _extract_email_from_claims(claims)
     groups = _extract_groups_from_claims(claims)
+    roles = _extract_roles_from_claims(claims)
 
     return {
         "id": claims.get("oid") or claims.get("sub"),
         "name": claims.get("name"),
         "email": email,
         "groups": groups,
+        "roles": roles,
         "raw_claims": claims,
     }
 

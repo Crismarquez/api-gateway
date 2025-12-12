@@ -23,6 +23,7 @@ async def read_current_user(claims: dict = Depends(get_current_user_claims)):
             "name": user_info["name"],
             "email": user_info["email"],
             "groups": user_info["groups"],
+            "roles": user_info["roles"],
         }
     }
 
